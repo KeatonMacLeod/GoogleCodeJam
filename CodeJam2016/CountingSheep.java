@@ -112,7 +112,6 @@ public class CountingSheep {
     			
     	}
     	
-    	System.out.println("AHW:LKJASD:LASKJD::");
     	return 0;
     }
 }
