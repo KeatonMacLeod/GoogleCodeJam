@@ -58,7 +58,6 @@ public class RevengeOfThePanckaes {
 		}
 	}//main
 	
-	//THIS WILL WORK, JUST TAKE A LOOK AT IT IN A MINUTE LOLZ.
 	static void happifyTheCakes (String pancakes)
 	{
 		int numberOfFlips = 0;
