@@ -16,16 +16,13 @@ public class CoinJam {
 			
 			//Need to print out 9 integers representing divisors from bases 2-10
 			
-			for (int caseCount = 0; caseCount < cases; caseCount++)
+			for (int caseCount = 1; caseCount <= cases; caseCount++)
 			{
 				N = in.nextInt();
 				J = in.nextInt();
 				
-				System.out.println("N" + N);
-				System.out.println("J" + J);
-				
-				System.out.print("Case #" + caseCount + ": ");
-				int smallestJamCoin = getSmallestJamCoin(N);
+				System.out.println("Case #" + caseCount + ": ");
+				String smallestJamCoin = getSmallestJamCoin(N);
 				findDeezCoins(smallestJamCoin,J);
 			}//for
 			
@@ -40,36 +37,35 @@ public class CoinJam {
 	}//main
 	
 	//Build the smallest jam coin for N
-	static int getSmallestJamCoin (int N)
+	static String getSmallestJamCoin (int N)
 	{
-		int length = (Integer.toString(N)).length();
 		String smallestJamCoin = "";
 	
-		for (int a = 0; a < length; a++)
+		for (int a = 0; a < N; a++)
 		{
 			if (a == 0)
 				smallestJamCoin += "1";
-			
-			else if (a == length-1)
+
+			else if (a == N-1)
 				smallestJamCoin += "1";
-			
+					
 			else
 				smallestJamCoin += "0";
+
 		}//for
 		
-		return Integer.parseInt(smallestJamCoin);
+		return smallestJamCoin;
 		
 	}//getSmallestJamCoin
 	
-	static void findDeezCoins(int smallestJamCoin, int J)
+	static void findDeezCoins(String smallestJamCoin, int J)
 	{
 		int base;
 		boolean isPrime = false;
 		int lineCount = 0;
-		int[] jamCoins = new int [9]; //Store the values of a jam coin in different bases.
+		String[] jamCoins = new String [9]; //Store the values of a jam coin in different bases.
 		int jamCoinIndex = 0;
-		
-		System.out.println("SMALLEST COIN " + smallestJamCoin);
+		int one = Integer.parseInt("1", 2); //Used to increment the current jam coin
 		
 		while (lineCount < J)
 		{
@@ -77,13 +73,13 @@ public class CoinJam {
 			for (base = 2; base <= 10 && !isPrime; base++)
 			{
 				//Convert jam coins to different values depending on the base
-				String jamCoinInBaseX = Integer.toString(Integer.parseInt("" + smallestJamCoin, 2), base);
-				isPrime = checkIfPrime(Integer.parseInt(jamCoinInBaseX));
+				String jamCoinInBaseX = Long.toString(Long.parseLong(smallestJamCoin, base));
+				isPrime = checkIfPrime(Long.parseLong(jamCoinInBaseX));
 				
 				//If it is prime, store the base 10 value of the jam coin at base x
 				if (!isPrime)
 				{
-					jamCoins[jamCoinIndex] = Integer.parseInt("" + smallestJamCoin, 10);
+					jamCoins[jamCoinIndex] = Long.toString(Long.parseLong(jamCoinInBaseX, 10));
 					jamCoinIndex++;
 				}
 				
@@ -100,6 +96,7 @@ public class CoinJam {
 			{
 				System.out.print(smallestJamCoin + " ");
 				printDivisors(jamCoins); //Print divisors for each jam coin in bases 2-10
+				lineCount++;
 			}
 			
 			//Reset the jam coin for checking
@@ -112,17 +109,18 @@ public class CoinJam {
 			jamCoinIndex = 0;
 			
 			//Increment the jam coin by 1
-			int one = Integer.parseInt("1", 2);
-			smallestJamCoin+=one;
+			long sum = Long.parseLong(smallestJamCoin, 2);
+			sum = sum + one;
+			smallestJamCoin = Long.toBinaryString(sum);
 			
 		}//while
 		
 	}//findDeezCoins
 	
 	//Check if a jam coin is a prime number in base 10
-	static boolean checkIfPrime (int jamCoin)
+	static boolean checkIfPrime (long jamCoin)
 	{
-		int jamCoinBaseTen = Integer.parseInt("" + jamCoin, 10);
+		long jamCoinBaseTen = Long.parseLong("" + jamCoin, 10);
 		
 	    //Check if the jam coin is a multiple of 2
 	    if (jamCoinBaseTen %2 == 0)
@@ -139,18 +137,18 @@ public class CoinJam {
 	    
 	}//checkIfPrime
 	
-	static void printDivisors (int[] jamCoins)
+	static void printDivisors (String[] jamCoins)
 	{
 		boolean foundDivisor = false;
 		
 		for (int a = 0; a < jamCoins.length; a++)
 		{
 			
-			for (int i = 2; i < jamCoins[a] / 2 && !foundDivisor; i++)
+			for (int i = 2; i < Long.parseLong(jamCoins[a]) / 2 && !foundDivisor; i++)
 			{
-				if (jamCoins[a] % i == 0)
+				if (Long.parseLong(jamCoins[a]) % i == 0)
 				{
-					System.out.print(jamCoins[a] + " ");
+					System.out.print(i + " ");
 					foundDivisor = true;
 				}
 				
@@ -159,6 +157,7 @@ public class CoinJam {
 			foundDivisor = false;
 		}//for
 		
+		System.out.println();
 	}//printDivisors
 
 }//CoinJam
