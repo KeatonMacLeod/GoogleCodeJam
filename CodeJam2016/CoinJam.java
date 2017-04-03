@@ -107,7 +107,7 @@ public class CoinJam {
 			//Reset the jam coin values in base 10 for the next jam coin
 			jamCoinIndex = 0;
 			
-			//Increment the jam coin by 1
+			//Increment the jam coin to next highest value
 			long sum = Long.parseLong(smallestJamCoin, 2);
 			sum = sum + 10;
 			smallestJamCoin = Long.toBinaryString(sum);
