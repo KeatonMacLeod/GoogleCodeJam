@@ -65,7 +65,6 @@ public class CoinJam {
 		int lineCount = 0;
 		String[] jamCoins = new String [9]; //Store the values of a jam coin in different bases.
 		int jamCoinIndex = 0;
-		int one = Integer.parseInt("1", 2); //Used to increment the current jam coin
 		
 		while (lineCount < J)
 		{
@@ -74,7 +73,7 @@ public class CoinJam {
 			{
 				//Convert jam coins to different values depending on the base
 				String jamCoinInBaseX = Long.toString(Long.parseLong(smallestJamCoin, base));
-				isPrime = checkIfPrime(Long.parseLong(jamCoinInBaseX));
+				isPrime = isPrime(Long.parseLong(jamCoinInBaseX));
 				
 				//If it is prime, store the base 10 value of the jam coin at base x
 				if (!isPrime)
@@ -88,7 +87,7 @@ public class CoinJam {
 					//Begin to rewrite the current coins in the array for the next jam coin.
 					jamCoinIndex = 0;
 				}
-				
+			
 			}//for
 			
 			//If it is a proper jam coin
@@ -110,32 +109,25 @@ public class CoinJam {
 			
 			//Increment the jam coin by 1
 			long sum = Long.parseLong(smallestJamCoin, 2);
-			sum = sum + one;
+			sum = sum + 10;
 			smallestJamCoin = Long.toBinaryString(sum);
 			
 		}//while
 		
 	}//findDeezCoins
 	
-	//Check if a jam coin is a prime number in base 10
-	static boolean checkIfPrime (long jamCoin)
-	{
+	static boolean isPrime(long jamCoin) {
 		long jamCoinBaseTen = Long.parseLong("" + jamCoin, 10);
 		
-	    //Check if the jam coin is a multiple of 2
-	    if (jamCoinBaseTen %2 == 0)
-	    	return false;
-	    
-	    //if not, then just check the odds
-	    for(int a=3; a*a<=jamCoinBaseTen; a+=2) 
-	    {
-	        if(jamCoinBaseTen % a == 0)
-	            return false;
+	    if(jamCoinBaseTen < 2) return false;
+	    if(jamCoinBaseTen == 2 || jamCoinBaseTen == 3) return true;
+	    if(jamCoinBaseTen%2 == 0 || jamCoinBaseTen%3 == 0) return false;
+	    long sqrtN = (long)Math.sqrt(jamCoinBaseTen)+1;
+	    for(long i = 6L; i <= sqrtN; i += 6) {
+	        if(jamCoinBaseTen%(i-1) == 0 || jamCoinBaseTen%(i+1) == 0) return false;
 	    }
-	    
 	    return true;
-	    
-	}//checkIfPrime
+	}
 	
 	static void printDivisors (String[] jamCoins)
 	{
