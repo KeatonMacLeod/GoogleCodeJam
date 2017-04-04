@@ -1,15 +1,20 @@
-package CodeJam2016;
-
 import java.io.*;
+import java.math.BigInteger;
 import java.util.Scanner;
 
 public class CoinJam {
+	
+	static BigInteger one = new BigInteger("1");
+	static BigInteger two = new BigInteger("2");
+	static BigInteger three = new BigInteger("3");
+	static BigInteger six = new BigInteger("6");
+	static BigInteger thousand = new BigInteger("1000");
 	
 	public static void main (String[] args)
 	{
 		try
 		{
-			Scanner in = new Scanner(new BufferedReader(new FileReader("coinjamsmall.txt")));
+			Scanner in = new Scanner(new BufferedReader(new FileReader("coinjamlarge.txt")));
 			int cases = in.nextInt();
 			int N; //The length of the jam coin
 			int J; //The number of different jam coins you need to print
@@ -72,13 +77,12 @@ public class CoinJam {
 			for (base = 2; base <= 10 && !isPrime; base++)
 			{
 				//Convert jam coins to different values depending on the base
-				String jamCoinInBaseX = Long.toString(Long.parseLong(smallestJamCoin, base));
-				isPrime = isPrime(Long.parseLong(jamCoinInBaseX));
-				
+				String jamCoinInBaseX = "" + new BigInteger(smallestJamCoin, base);
+				isPrime = isPrime(jamCoinInBaseX);
 				//If it is prime, store the base 10 value of the jam coin at base x
 				if (!isPrime)
 				{
-					jamCoins[jamCoinIndex] = Long.toString(Long.parseLong(jamCoinInBaseX, 10));
+					jamCoins[jamCoinIndex] = "" + new BigInteger(jamCoinInBaseX, 10);
 					jamCoinIndex++;
 				}
 				
@@ -107,24 +111,27 @@ public class CoinJam {
 			//Reset the jam coin values in base 10 for the next jam coin
 			jamCoinIndex = 0;
 			
-			//Increment the jam coin to next highest value
-			long sum = Long.parseLong(smallestJamCoin, 2);
-			sum = sum + 10;
-			smallestJamCoin = Long.toBinaryString(sum);
+			//Increment the jam coin by 1
+			BigInteger sum = new BigInteger(smallestJamCoin, 2);
+			sum = sum.add(new BigInteger("10"));
+			smallestJamCoin = sum.toString(2);
 			
 		}//while
 		
 	}//findDeezCoins
 	
-	static boolean isPrime(long jamCoin) {
-		long jamCoinBaseTen = Long.parseLong("" + jamCoin, 10);
-		
-	    if(jamCoinBaseTen < 2) return false;
-	    if(jamCoinBaseTen == 2 || jamCoinBaseTen == 3) return true;
-	    if(jamCoinBaseTen%2 == 0 || jamCoinBaseTen%3 == 0) return false;
-	    long sqrtN = (long)Math.sqrt(jamCoinBaseTen)+1;
-	    for(long i = 6L; i <= sqrtN; i += 6) {
-	        if(jamCoinBaseTen%(i-1) == 0 || jamCoinBaseTen%(i+1) == 0) return false;
+	static boolean isPrime(String jamCoin) {
+		BigInteger jamCoinBaseTen = new BigInteger(jamCoin, 10);
+		if(jamCoinBaseTen.compareTo(two) == -1) 
+			return false;
+	    if(jamCoinBaseTen.compareTo(two) == 0 || jamCoinBaseTen.compareTo(three) == 0) 
+	    	return true;
+	    if((jamCoinBaseTen.mod(two)).intValue() == 0 || (jamCoinBaseTen.mod(three)).intValue() == 0)
+	    	return false;
+	    for(BigInteger i = new BigInteger("6"); i.compareTo(thousand) <= 0; i = i.add(six)) {
+	        if((jamCoinBaseTen.mod(i.subtract(one))).intValue() == 0 ||
+        	   (jamCoinBaseTen.mod(i.add(one))).intValue() == 0) 
+	        	return false;
 	    }
 	    return true;
 	}
@@ -136,9 +143,11 @@ public class CoinJam {
 		for (int a = 0; a < jamCoins.length; a++)
 		{
 			
-			for (int i = 2; i < Long.parseLong(jamCoins[a]) / 2 && !foundDivisor; i++)
+			BigInteger baseTenJamCoin = new BigInteger(jamCoins[a]);
+			
+			for (BigInteger i = two; i.compareTo(baseTenJamCoin.divide(two)) == -1 && !foundDivisor; i = i.add(one))
 			{
-				if (Long.parseLong(jamCoins[a]) % i == 0)
+				if ((baseTenJamCoin.mod(i)).intValue() == 0)
 				{
 					System.out.print(i + " ");
 					foundDivisor = true;
@@ -151,5 +160,24 @@ public class CoinJam {
 		
 		System.out.println();
 	}//printDivisors
+	
+	static BigInteger squareRootBigInt(BigInteger x)
+	        throws IllegalArgumentException {
+	    if (x.compareTo(BigInteger.ZERO) < 0) {
+	        throw new IllegalArgumentException("Negative argument.");
+	    }
+	    // square roots of 0 and 1 are trivial and
+	    // y == 0 will cause a divide-by-zero exception
+	    if (x .equals(BigInteger.ZERO) || x.equals(BigInteger.ONE)) {
+	        return x;
+	    } // end if
+	    BigInteger two = BigInteger.valueOf(2L);
+	    BigInteger y;
+	    // starting with y = x / 2 avoids magnitude issues with x squared
+	    for (y = x.divide(two);
+	            y.compareTo(x.divide(y)) > 0;
+	            y = ((x.divide(y)).add(y)).divide(two));
+	    return y;
+	} // end bigIntSqRootFloor
 
 }//CoinJam
