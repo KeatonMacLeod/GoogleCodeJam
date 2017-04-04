@@ -4,11 +4,12 @@ import java.util.Scanner;
 
 public class CoinJam {
 	
-	static BigInteger one = new BigInteger("1");
-	static BigInteger two = new BigInteger("2");
-	static BigInteger three = new BigInteger("3");
-	static BigInteger six = new BigInteger("6");
-	static BigInteger thousand = new BigInteger("1000");
+	//Only instantiate these variables once
+	static final BigInteger one = new BigInteger("1");
+	static final BigInteger two = new BigInteger("2");
+	static final BigInteger three = new BigInteger("3");
+	static final BigInteger six = new BigInteger("6");
+	static final BigInteger thousand = new BigInteger("1000");
 	
 	public static void main (String[] args)
 	{
