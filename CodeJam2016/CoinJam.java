@@ -179,6 +179,6 @@ public class CoinJam {
 	            y.compareTo(x.divide(y)) > 0;
 	            y = ((x.divide(y)).add(y)).divide(two));
 	    return y;
-	} // end bigIntSqRootFloor
+	}//squareRootBigInt
 
 }//CoinJam
